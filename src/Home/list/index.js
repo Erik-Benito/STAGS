@@ -1,5 +1,11 @@
 import { UseActivitiesContext } from "../../context";
 
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import {
   TableAdm,
   Thead,
@@ -10,16 +16,18 @@ import {
 
 import Container from "./styled";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 
+export default function List() {
 
-export default function list() {
-
+    const [activitiesArray, setActivitiesArray] = useState([])
+    const [filter, setFilter] = useState("")  
 
     const {
-    activitieState: {
-      item: { id, title, description, completed },
-      activities,
+      activitieState: {
+        item: { id, title, description, completed },
+        activities,
     },
     setCompleted,
     setTitle,
@@ -36,9 +44,63 @@ export default function list() {
       setId(item.id)
   }
 
+  const confirmDelete = (id) => {
+    confirmAlert({
+      title: "Remover Atividade",
+      message: `Tem certeza que deseja remover esta Atividade? `,
+      buttons: [
+        {
+          label: "Sim",
+          onClick: () => setRemoveActivitie(id)
+        },
+        { label: "Não" },
+      ],
+    });
+  };
+
+  function edtItemActivies() {
+    if (!title){
+      return toast.error('O campo Titulo deve ser preenchido')
+        
+    }
+    if (!description){
+        return  toast.error('O campo Descrição deve ser preenchido')
+    }   
+    
+    setUpdateActivitie({id: id, title: title, description: description, completed: completed})
+    toast.success('✨A atividade foi Atualizada')
+    
+    setActivitiesArray(activities)
+    setFilter("Todos")
+  }
+
+  function filterActivies() {
+    switch (filter) {
+      case "Todos":
+          setActivitiesArray(activities)
+      break;
+    
+      case "Concluido":
+        setActivitiesArray(activities.filter(item => item.completed === true))
+      break;
+  
+      case "Não concluido":
+        setActivitiesArray(activities.filter(item => item.completed === false))
+      break;
+
+      default:
+        setActivitiesArray(activities)
+        break;
+    }
+    return 
+}
+  useEffect( () => {filterActivies()}, [filter])
+  
+  
   return (
     <Container>
-        <Link to="/"> VOLTAR </Link>
+      <ToastContainer/>
+      <Link to="/">NOVA ATIVIDADE + </Link>
       <h1>LISTA COMPLETA</h1>
       <form
         style={
@@ -77,155 +139,61 @@ export default function list() {
           />
         </div>
       </form>
-      <button
-        className="add"
-        style={
-          title === ""
-            ? {
+      <button className="add"
+        style={ title === "" ? {
                 pointerEvents: "none",
                 opacity: "0.4",
-              }
-            : {}
-        }
-        onClick={() =>
-          setUpdateActivitie({
-            id: id,
-            title: title,
-            description: description,
-            completed: completed,
-          })
-        }
+              } : { }
+            }
+        onClick={edtItemActivies}
       >
         ALTERAR
       </button>
-
       <div className="tables">
-        <div>
-          <RobotoStyle>NÃO CONCLUIDOS</RobotoStyle>
-          <TableAdm size="500px">
+          <div className="filter">
+            <label>FILTROS:</label>
+            <label><input name="radioInput" checked={ filter === "Todos" ? true : false} onClick={() => setFilter("Todos")} type="radio" value="Todos"/>         <span>Todos</span>             </label>
+            <label><input name="radioInput" checked={ filter === "Concluido" ? true : false} onClick={() => setFilter("Concluido")} type="radio" value="Concluido"/>     <span>Concluido</span>         </label>
+            <label><input name="radioInput" checked={ filter === "Não concluido" ? true : false} onClick={() => setFilter("Não concluido")} type="radio" value="Não Concluido"/> <span>Não Concluido</span>     </label>
+          </div>
+          <TableAdm size="100%">
             <Thead>
               <tr>
                 <th>
                   <RobotoStyle> Titulo </RobotoStyle>
                 </th>
-
                 <th>
                   <RobotoStyle> Descrição </RobotoStyle>
                 </th>
-
                 <th>
                   <RobotoStyle> Status </RobotoStyle>
                 </th>
-
                 <th></th>
-
-
                 <th></th>
               </tr>
             </Thead>
-
-            {activities.map((item) =>
-              item.completed === false ? (
-                <Tr key={item._id}>
-                  <Td> {item.title} </Td>
-                  <Td>
-                    {" "}
-                    <input
-                      type="checkbox"
-                      checked={item.completed}
-                      readOnly={true}
-                    />{" "}
-                  </Td>
-                  <Td> {item.description} </Td>
-                  <Td
-                    config={{ visibility: "hidden", width: "5em" }}
-                    onClick={() => setRemoveActivitie(item.id)}
-                  >
-                    <img
-                      className="iconDelete"
-                      src="/assets/images/trash.svg"
-                      alt="trash.svg"
-                    />
-                  </Td>
-                  <Td
-                    config={{ visibility: "hidden", width: "5em" }}
-                    onClick={() => edtActivities(item)}
+            <tbody>
+              {activitiesArray.map((item) =>
+                  <Tr key={item._id}>
+                    <Td> {item.title.length >= 15  ? item.title.substring(0,15) + '...' : item.title} </Td>
+                    <Td> < input type="checkbox" checked={item.completed} readOnly={true} /> </Td>
+                    <Td> {item.description.length >= 30  ? item.description.substring(0,30) + '...': item.description } </Td>
+                    <Td
+                      config={{ visibility: "hidden", width: "5em" }}
+                      onClick={() => confirmDelete(item.id)}
                     >
-                    <img
-                      className="iconDelete"
-                      src="/assets/images/edt.svg"
-                      alt="trash.svg"
-                    />
-                  </Td>
-                </Tr>
-              ) : (
-                ""
-              )
-            )}
-          </TableAdm>
-        </div>
-
-        <div>
-        <RobotoStyle>CONCLUIDOS</RobotoStyle>
-          <TableAdm size="500px">
-            <Thead>
-              <tr>
-                <th>
-                  <RobotoStyle> Titulo </RobotoStyle>
-                </th>
-
-                <th>
-                  <RobotoStyle> Descrição </RobotoStyle>
-                </th>
-
-                <th>
-                  <RobotoStyle> Status </RobotoStyle>
-                </th>
-
-                <th></th>
-                <th></th>
-              </tr>
-            </Thead>
-
-            {activities.map((item) =>
-              item.completed === true ? (
-                <Tr key={item._id}>
-                  <Td> {item.title} </Td>
-                  <Td>
-                    <input
-                      type="checkbox"
-                      checked={item.completed}
-                      readOnly={true}
-                    />
-                  </Td>
-                  <Td> {item.description} </Td>
-                  <Td
-                    config={{ visibility: "hidden", width: "5em" }}
-                    onClick={() => setRemoveActivitie(item.id)}
-                  >
-                    <img
-                      className="iconDelete"
-                      src="/assets/images/trash.svg"
-                      alt="trash.svg"
-                    />
+                      <img className="iconDelete" src="/assets/images/trash.svg" alt="trash.svg"/>
                     </Td>
                     <Td
-                    config={{ visibility: "hidden", width: "5em" }}
-                    onClick={() => edtActivities(item)}
-                    >
-                    <img
-                      className="iconDelete"
-                      src="/assets/images/edt.svg"
-                      alt="trash.svg"
-                    />
-                  </Td>
-                </Tr>
-              ) : (
-                ""
-              )
-            )}
+                      config={{ visibility: "hidden", width: "5em" }}
+                      onClick={() => edtActivities(item)}
+                      >
+                      <img className="iconDelete" src="/assets/images/edt.svg" alt="trash.svg"/>
+                    </Td>
+                  </Tr>
+              )}
+            </tbody>
           </TableAdm>
-        </div>
       </div>
     </Container>
   );

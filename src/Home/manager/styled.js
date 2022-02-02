@@ -10,7 +10,6 @@ const Container = styled.div`
     height: auto;
     min-height: 84vh;
 
-
     background-color: #FFFFFF;
     color: #3C3939;
 
@@ -18,7 +17,15 @@ const Container = styled.div`
     padding: 2.5em 1.5em;
 
     box-shadow: 0px 0px 4px 1px #BFBFBF;
+    
+    .container-form{
+        width: 100%;
+        height: 100%;
 
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
     h1,h2{
         font-family: "Manrope";
         font-size: 1.9em
@@ -96,14 +103,12 @@ const Container = styled.div`
 
     a{
         cursor: pointer;
-        width: 15%;
-        align-self: flex-end;
+        align-self: center;
         background: #3C3939;
         border-radius: 15px;
         border: solid 2px;
         color: white;
         padding: 0.5em 2em;
-        margin-right: 8em;
         &:hover{
             background: white;
             color:#3C3939;

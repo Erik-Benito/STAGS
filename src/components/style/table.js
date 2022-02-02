@@ -60,6 +60,7 @@ const Td = styled.td`
 
 const TableAdm = styled.table`
     width: ${props => props.size};
+    min-width: 75em;
 
     border-left: 1px solid #E2E2E2;
     border-right: 1px solid #E2E2E2;

@@ -78,6 +78,7 @@ export default function ActivitiesProvider(props) {
     
     const [ activitieState, setActivitieState ] = useReducer(reducer, initialState)
 
+    console.log(activitieState)
      return (
        <ActivitiesContext.Provider value={{ activitieState, setActivitieState }}>
          {props.children}
@@ -99,6 +100,6 @@ export default function ActivitiesProvider(props) {
         setCompleted:           (completed)   => setActivitieState({type: 'setCompleted'  , completed   }),
         setAddactivitie:        (item)        => setActivitieState({type: 'setAddactivitie'   , item   }),
         setUpdateActivitie:     (item)        => setActivitieState({type: 'setUpdateActivitie', item   }),
-        setRemoveActivitie:     (id)          => setActivitieState({type: 'setRemoveActivitie', id      })
+        setRemoveActivitie:     (id)          => setActivitieState({type: 'setRemoveActivitie', id      }),
     }
  }

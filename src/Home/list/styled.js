@@ -7,6 +7,7 @@ const Container = styled.div`
 
     height: auto;
     min-height: 84vh;
+    width: 128vh;
 
     background-color: #FFFFFF;
     color: #3C3939;
@@ -16,9 +17,6 @@ const Container = styled.div`
 
     box-shadow: 0px 0px 4px 1px #BFBFBF;
 
-    .tables{
-        display: flex;
-    }
     h1,h2{
         font-family: "Manrope";
         font-size: 1.9em
@@ -28,6 +26,14 @@ const Container = styled.div`
         align-self: center;
         width: 80%;
     
+    }
+    label{
+        font-family: 'Roboto';
+        font-size: 1em;
+        margin: 15px;
+    }
+    .filter{
+        margin: 15px;
     }
     .divInput{
 
@@ -86,6 +92,8 @@ const Container = styled.div`
         padding: 0.8em 1.5em;
         cursor: pointer;
 
+        margin: 15px;
+
         &:hover{
             transition: 0.3s;
             background:white;
@@ -94,6 +102,20 @@ const Container = styled.div`
         }
     }
 
+    a{
+        cursor: pointer;
+        align-self: center;
+        background: #3C3939;
+        border-radius: 15px;
+        border: solid 2px;
+        color: white;
+        padding: 0.5em 2em;
+        &:hover{
+            background: white;
+            color:#3C3939;
+            transition: 0.4s;
+        }
+    }
 `
 
 
