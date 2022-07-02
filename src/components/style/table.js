@@ -5,8 +5,7 @@ const Thead = styled.thead`
     th {
         padding-left: 10px;
         text-align: left;
-        background-color: #3E4243;
-
+        background-color: black;
     }
 
     th:nth-child(1) {
@@ -16,6 +15,7 @@ const Thead = styled.thead`
     tr {
         height: 2em;
         color: #FFFFFF;
+        border-radius: 5px;
     }
 `
 
@@ -60,7 +60,6 @@ const Td = styled.td`
 
 const TableAdm = styled.table`
     width: ${props => props.size};
-    min-width: 75em;
 
     border-left: 1px solid #E2E2E2;
     border-right: 1px solid #E2E2E2;
